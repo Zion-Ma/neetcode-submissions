@@ -1,0 +1,39 @@
+class Node:
+    def __init__(self):
+        self.chd = dict()
+        self.wordEnd = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.root = Node()
+
+    def addWord(self, word: str) -> None:
+        curr = self.root
+        for w in word:
+            if w not in curr.chd:
+                curr.chd[w] = Node()
+            curr = curr.chd[w]
+        curr.wordEnd = True
+
+    def search(self, word: str) -> bool:
+        def subSearch(curr: Node, sub: str) -> bool:
+            if len(sub) == 0 and curr.wordEnd:
+                return True
+            for i, ch in enumerate(sub):
+                if ch == ".":
+                    found = False
+                    for k in curr.chd.keys():
+                        found |= subSearch(curr.chd[k], sub[i + 1:])
+                    return found
+                else:
+                    if ch not in curr.chd:
+                        return False
+                    curr = curr.chd[ch]
+            return curr.wordEnd
+        return subSearch(self.root, word)
+
+
+
+
+
